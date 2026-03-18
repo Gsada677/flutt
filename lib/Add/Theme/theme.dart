@@ -1,25 +1,32 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:h/Add/Theme/Home.dart';
+import 'package:h/Add/addpage.dart';
+import 'package:h/homee/homePage.dart';
 
-class Theme extends StatefulWidget{
-  const Theme ({super.key});
+class Themee extends StatefulWidget{
+  const Themee ({super.key});
   
   @override
-  State<Theme> createState() => _Theme();
+  State<Themee> createState() => _Theme();
  
   
 }
-class _Theme extends State<Theme>{
+class _Theme extends State<Themee>{
   ThemeMode themeMode = ThemeMode.light;
   void toggleTheme(){
     setState(() {
-      themeMode == ThemeMode.light?ThemeMode.dark:ThemeMode.light;
+      themeMode=themeMode == ThemeMode.light?ThemeMode.dark:ThemeMode.light;
     });
+
   }
   
   @override
   Widget build(BuildContext context) {
    return MaterialApp(
+   
+    
     title: 'Theme Mode',
     themeMode: themeMode,
     theme: ThemeData(
@@ -41,9 +48,12 @@ class _Theme extends State<Theme>{
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: Colors.deepPurpleAccent,
-      )
+      ),
+      
     ),
-    home: Home(onToggle: toggleTheme, themeMode: themeMode),
+    home: Home(onToggle: toggleTheme, themeMode: themeMode)
    );
+    
+   
   }
 }

@@ -1,11 +1,16 @@
-import 'dart:math';
-
 
 import 'package:h/Add/Theme/Home.dart';
+import 'package:h/Add/Theme/theme.dart';
+import 'package:h/app_DataBase.dart';
+import 'package:h/app_repository.dart';
+import 'package:h/homee/App_Drawer.dart';
+import 'package:h/homee/home_state.dart';
+import 'package:h/homee/home_view_modal.dart';
 
 import 'todo.dart/Toodo.dart';
 import 'package:flutter/material.dart';
 import 'package:h/Add/addpage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 class MyHomePage extends StatefulWidget {
 
 const MyHomePage ({super.key,});
@@ -15,6 +20,10 @@ const MyHomePage ({super.key,});
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+ 
+  late PreferredSize preferredSize;
+  late final String contr;
+  late final homeCubit cubit;
   ThemeMode themeMode = ThemeMode.light;
 List<Toodo> tasks=[];
 bool isVisible=true;
@@ -24,6 +33,11 @@ bool isVisible=true;
     // TODO: implement initState
     super.initState();
     print('home page initState');
+    final dp=AppDatabase();
+    final repo=AppRepositoryImpl(dp);
+    final vm=HomeViewModal(repo: repo);
+cubit=homeCubit(vm: vm);
+cubit.fetchList();
   }
   @override
   void didChangeDependencies() {
@@ -31,15 +45,47 @@ bool isVisible=true;
     super.didChangeDependencies();
     print('don');
   }
+  
   @override
-  Widget build(BuildContext context) {print('tgt');
-    return Scaffold(
+  Widget build(BuildContext context) {
+    
+    return BlocProvider.value(value: cubit,child: 
+    Scaffold(
+      appBar: AppBar(title: Text('tasks'),
+      ),
+      body: BlocBuilder<homeCubit,HomeState>(
+        builder: (context, state) {
+          if(state.isError){
+            return Center(
+              child: Text('Error'),
+            );
+          }else if(state.items.isEmpty){
+            return Center(child: Text('List is Empty'),);
+          }
+          
+
+          
+
+          
+          return Scaffold(
+        
+
+  
+
+        
+        
+    
+  
       appBar: AppBar(
         title: Text('gren'),
+        
       ),
-      body: Center(
+      drawer: Themee(),
+           body: Center(
         child: Column(
+          
           mainAxisAlignment: .center,
+          
           children: [
 
             /*Text(text),
@@ -56,7 +102,7 @@ bool isVisible=true;
   Expanded(child:ListView.builder(itemCount: tasks.length,itemBuilder: (context,index){
   return GestureDetector(
                 child: Container(
-                  height: 60,
+                  height: 85,
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -89,16 +135,30 @@ bool isVisible=true;
   },
   ),
   ),
+      
           ],
         ),
-        
+
       ),
+
+        
+        
+          );
+          
+          
+        },
+      
+      ),
+      
+    
+  
+      
     
           
                           
                         
                       
-                    
+             
                   
                 
               
@@ -114,31 +174,31 @@ bool isVisible=true;
     
       
     ),
-      
-    
-    
+ 
+  
 
 floatingActionButtonLocation:  FloatingActionButtonLocation.centerFloat,
 
+       )
     );
-}
+  }
+
  void toggleTheme(){
     setState(() {
-      themeMode == ThemeMode.light?ThemeMode.dark:ThemeMode.light;
+      themeMode =themeMode== ThemeMode.light?ThemeMode.dark:ThemeMode.light;
     });
   }
+ 
 void _naviagateToAddPage()async{
-final result=await Navigator.push<String>(context,MaterialPageRoute(builder: (_)=>const AddPage()));
+final result=await Navigator.push<String>(context,MaterialPageRoute(builder: (_)=> AddPage()));
 
   
   if (result != null && result.isNotEmpty) {
     setState(() {
       tasks.add(Toodo(tittle: result,isDone: false,Date: DateTime.now().toString()));
     });
-    void _naviagateToAddPage()async{
-final result=await Navigator.push<String>(context, MaterialPageRoute(builder: (_)=>Home(onToggle: toggleTheme, themeMode: themeMode)));
-  }
-  }
+
+
  
   floatingActionButton: FloatingActionButton.extended(
       onPressed: _naviagateToAddPage,
@@ -149,59 +209,6 @@ final result=await Navigator.push<String>(context, MaterialPageRoute(builder: (_
   
   
   );
-}
-}
-class Theme extends StatefulWidget{
-  const Theme ({super.key});
-  
-  @override
-  State<Theme> createState() => _Theme();
- 
-  
-}
-class _Theme extends State<Theme>{
-  ThemeMode themeMode = ThemeMode.light;
-  void toggleTheme(){
-    setState(() {
-      themeMode == ThemeMode.light?ThemeMode.dark:ThemeMode.light;
-    });
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-   return MaterialApp(
-    title: 'Theme Mode',
-    themeMode: themeMode,
-    theme: ThemeData(
-      brightness: Brightness.light,
-      scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.blue,
-      ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Colors.blue,
-      )
-    ),
-    darkTheme: ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: Colors.black,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.deepPurpleAccent,
-
-      ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Colors.deepPurpleAccent,
-      )
-    ),
-    home: Home(onToggle: toggleTheme, themeMode: themeMode),
-   );
   }
 }
-
-
-
-
-
-
-  
-
+}
