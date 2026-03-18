@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/semantics.dart';
+import 'package:h/homee/homePage.dart';
+import "theme.dart";
 class Home extends StatelessWidget{
   final VoidCallback onToggle;
   final ThemeMode themeMode;
@@ -9,15 +11,54 @@ class Home extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-    appBar: AppBar(
-      title: Text('ThemeData && ThemeMode'),
-    ),
-    floatingActionButton: FloatingActionButton(onPressed: onToggle,
-    child: Icon(
-      themeMode==ThemeMode.light?Icons.toggle_off:Icons.toggle_on,
+    Title(color: Colors.black, child: Text('Settings'));
+   return Drawer(
+    
+   child:  ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Container(
+          
+          height: 120,
+          padding: EdgeInsets.all(16),
+          
+          decoration: BoxDecoration(
 
+          ),
+        ),
+draweritem(context,tittle2: 'Dark Theme', icon: Icons.toggle_on, onToggle: onToggle, tittle: 'White Theme', opisanie: 'пирамида хиопса была построена массонами и инопланетянами а, еще самолетом в 11 сентября 2001 года  управляла женщина,My Brother from another mother my sister from another mister')
+      ],
     ),
-    ),
+    
+    
+   
    );
-  }}
+  }
+
+   Widget draweritem(
+    BuildContext context,{
+   required   IconData icon,
+ required     VoidCallback onToggle,
+required String tittle,
+required String tittle2,
+
+required String opisanie,
+    }){
+      return ListTile(
+       trailing: Switch(value: themeMode==ThemeMode.dark ,onChanged: (value)=>onToggle(),),
+       title: Text(themeMode==ThemeMode.light?'White Theme':'Dark Theme',),
+       subtitle: Text(opisanie),
+      
+       
+        
+        horizontalTitleGap: 8,
+        
+      );
+      
+      
+    }
+    
+
+
+    
+  }
